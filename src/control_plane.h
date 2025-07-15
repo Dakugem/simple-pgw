@@ -14,11 +14,15 @@ public:
 
     std::shared_ptr<bearer> find_bearer_by_dp_teid(uint32_t dp_teid) const;
 
+    std::shared_ptr<last_packet> find_bearer_ul_rate_limiter_by_dp_teid(uint32_t dp_teid) const;
+
+    std::shared_ptr<last_packet> find_bearer_dl_rate_limiter_by_dp_teid(uint32_t dp_teid) const;
+
     std::shared_ptr<pdn_connection> create_pdn_connection(const std::string &apn, boost::asio::ip::address_v4 sgw_addr,
                                                           uint32_t sgw_cp_teid);
     void delete_pdn_connection(uint32_t cp_teid);
 
-    std::shared_ptr<bearer> create_bearer(const std::shared_ptr<pdn_connection> &pdn, uint32_t sgw_teid);
+    std::shared_ptr<bearer> create_bearer(const std::shared_ptr<pdn_connection> &pdn, uint32_t sgw_teid, uint32_t ul_rate_limit = 0, uint32_t dl_rate_limit = 0);
 
     void delete_bearer(uint32_t dp_teid);
 
@@ -28,5 +32,7 @@ private:
     std::unordered_map<uint32_t, std::shared_ptr<pdn_connection>> _pdns;
     std::unordered_map<boost::asio::ip::address_v4, std::shared_ptr<pdn_connection>> _pdns_by_ue_ip_addr;
     std::unordered_map<uint32_t, std::shared_ptr<bearer>> _bearers;
+    std::unordered_map<uint32_t, std::shared_ptr<last_packet>> _ul_rate_limiter;
+    std::unordered_map<uint32_t, std::shared_ptr<last_packet>> _dl_rate_limiter;
     std::unordered_map<std::string, boost::asio::ip::address_v4> _apns;
 };
